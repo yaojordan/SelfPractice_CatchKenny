@@ -33,6 +33,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        let highScore = UserDefaults.standard.object(forKey: "highscore")
+        
+        if highScore == nil {
+            highScoreLabel.text = "0"
+        }
+        
+        if let newScore = highScore as? Int {
+            highScoreLabel.text = String(newScore)
+        }
+        
         scoreLabel.text = "Score: \(score)"
         
         let recognizer1 = UITapGestureRecognizer(target: self, action: #selector(ViewController.increaseScore))
@@ -65,7 +75,7 @@ class ViewController: UIViewController {
         kenny8.isUserInteractionEnabled = true
         kenny9.isUserInteractionEnabled = true
         
-        counter =30
+        counter = 30
         timeLabel.text = "\(counter)"
         timer = Timer.scheduledTimer(timeInterval: 1, target: self,
                                      selector: #selector(ViewController.countDown), userInfo: nil, repeats: true)
@@ -97,6 +107,13 @@ class ViewController: UIViewController {
         if counter == 0 {
             timer.invalidate()
             hideTimer.invalidate()
+            
+            if self.score > Int(highScoreLabel.text!)! {
+                
+                UserDefaults.standard.set(self.score, forKey: "highscore")
+                highScoreLabel.text = String(self.score)
+            }
+            
             
             let alert = UIAlertController(title: "Time", message: "Your time is up", preferredStyle: UIAlertControllerStyle.alert)
             let ok = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
